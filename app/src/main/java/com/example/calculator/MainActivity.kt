@@ -2,97 +2,106 @@ package com.example.calculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.button.*
-import kotlinx.android.synthetic.main.input_layout.*
-import java.lang.Exception
+import com.example.calculator.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
+        // button layout view binding
+        val includeButtonView = binding.IncludeButton
 
         // number listener
-        btn0.setOnClickListener{
+        includeButtonView.btn0.setOnClickListener{
             appendOnClick("0")
         }
-        btn1.setOnClickListener{
+        includeButtonView.btn1.setOnClickListener{
             appendOnClick("1")
         }
-        btn2.setOnClickListener{
+        includeButtonView.btn2.setOnClickListener{
             appendOnClick("2")
         }
-        btn3.setOnClickListener{
+        includeButtonView.btn3.setOnClickListener{
             appendOnClick("3")
         }
-        btn4.setOnClickListener{
+        includeButtonView.btn4.setOnClickListener{
             appendOnClick("4")
         }
-        btn5.setOnClickListener{
+        includeButtonView.btn5.setOnClickListener{
             appendOnClick("5")
         }
-        btn6.setOnClickListener{
+        includeButtonView.btn6.setOnClickListener{
             appendOnClick("6")
         }
-        btn7.setOnClickListener{
+        includeButtonView.btn7.setOnClickListener{
             appendOnClick("7")
         }
-        btn8.setOnClickListener{
+        includeButtonView.btn8.setOnClickListener{
             appendOnClick("8")
         }
-        btn9.setOnClickListener{
+        includeButtonView.btn9.setOnClickListener{
             appendOnClick("9")
         }
 
         // operator listener
-        btnBracket.setOnClickListener{
+        includeButtonView.btnBracket.setOnClickListener{
             appendOnClick("()")
         }
-        btnPercent.setOnClickListener{
+        includeButtonView.btnPercent.setOnClickListener{
             appendOnClick("%")
         }
-        btnDivsion.setOnClickListener{
+        includeButtonView.btnDivsion.setOnClickListener{
             appendOnClick("/")
         }
-        btnMulti.setOnClickListener{
+        includeButtonView.btnMulti.setOnClickListener{
             appendOnClick("*")
         }
-        btnMinus.setOnClickListener{
+        includeButtonView.btnMinus.setOnClickListener{
             appendOnClick("-")
         }
-        btnPlus.setOnClickListener{
+        includeButtonView.btnPlus.setOnClickListener{
             appendOnClick("+")
         }
-        btnDot.setOnClickListener{
+        includeButtonView.btnDot.setOnClickListener{
             appendOnClick(".")
         }
 
-        btnClear.setOnClickListener{
+        includeButtonView.btnClear.setOnClickListener{
             clear()
         }
 
-        btnEqual.setOnClickListener{
+        includeButtonView.btnEqual.setOnClickListener{
             calculate()
         }
 
     }
 
-    fun appendOnClick(string:String){
-        userInput.append(string)
+    private fun appendOnClick(string:String){
+        val includeInputLayout = binding.IncludeInputLayout
+        includeInputLayout.userInput.append(string)
     }
 
-    fun clear(){
-        userInput.text = ""
-        userOutput.text = ""
+    private fun clear(){
+        val includeInputLayout = binding.IncludeInputLayout
+        includeInputLayout.userInput.text = ""
+        includeInputLayout.userOutput.text = ""
     }
 
-    fun calculate(){
-        try{
+    private fun calculate(){
+        kotlin.runCatching {
 
-        }catch (e:Exception){
+        }.onFailure {e ->
             Toast.makeText(this@MainActivity,e.message,Toast.LENGTH_LONG).show()
         }
     }
+
 }

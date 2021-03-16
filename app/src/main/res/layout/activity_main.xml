@@ -6,6 +6,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
     <include
+        android:id="@+id/IncludeInputLayout"
         layout="@layout/input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -17,6 +18,7 @@
         android:background="@color/add_white">
 
         <include
+            android:id="@+id/IncludeButton"
             layout="@layout/button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
