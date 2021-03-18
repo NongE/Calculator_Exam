@@ -1,9 +1,9 @@
 package com.example.calculator
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.example.calculator.databinding.ActivityMainBinding
 
 
@@ -11,7 +11,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private var operatorStack = mutableListOf<String>()
+    private var operatorStack = KotlinStack()
     private var numberStack = mutableListOf<Any>()
     private var bracketFlag = false
 
@@ -59,14 +59,14 @@ class MainActivity : AppCompatActivity() {
 
         // operator listener
         includeButtonView.btnBracket.setOnClickListener{
-            when (bracketFlag){
+            bracketFlag = when (bracketFlag){
                 false -> {
                     appendOnClick(true,"(")
-                    bracketFlag = true
+                    true
                 }
                 true -> {
                     appendOnClick(true,")")
-                    bracketFlag = false
+                    false
                 }
             }
 
@@ -108,15 +108,15 @@ class MainActivity : AppCompatActivity() {
 
             when (string){
                 ")" -> {
-                    operatorStack.add(string)
+                    operatorStack.push(string)
                     operatorStack.remove("(")
                     operatorStack.remove(")")
                     operatorStack.reverse()
-                    numberStack.addAll(operatorStack)
+                    numberStack.addAll(operatorStack.get())
                     operatorStack.clear()
                 }
                 else -> {
-                    operatorStack.add(string)
+                    operatorStack.push(string)
                 }
             }
 
@@ -137,58 +137,41 @@ class MainActivity : AppCompatActivity() {
 
     private fun calculate(){
 
-        var calculateStack = mutableListOf<Int>()
+        val calculateStack = KotlinStack()
         kotlin.runCatching {
-            numberStack.addAll(operatorStack)
+            operatorStack.reverse()
+            numberStack.addAll(operatorStack.get())
 
-            Log.d("calculateLog", "is operator ${operatorStack}")
-            Log.d("calculateLog", "is operator ${numberStack}")
-            for(index in 0..numberStack.size-1){
+            Log.d("calculateLog", "is operator $numberStack")
+            for(index in 0 until numberStack.size){
                 if(numberStack[index] is Int) {
-                    calculateStack.add(numberStack[index] as Int)
+                    calculateStack.push(numberStack[index] as Int)
+                    Log.d("calculateLog", "is push ${calculateStack.get()}")
                 }else{
-                    var rangeOfCalculateStack = calculateStack.size
                     when (numberStack[index]){
                         "+" -> {
-                            val calTemp = calculateStack[rangeOfCalculateStack-1] + calculateStack[rangeOfCalculateStack-2]
-                            calculateStack.removeAt(rangeOfCalculateStack-1)
-                            rangeOfCalculateStack -= 1
-                            calculateStack.removeAt(rangeOfCalculateStack-1)
-                            rangeOfCalculateStack -= 1
-                            calculateStack.add(calTemp)
-                            Log.d("calculateLog", "active + is ${calculateStack[0]}")
+                            val calTemp = calculateStack.pop() as Int + calculateStack.pop() as Int
+                            Log.d("calculateLog", "is + $calTemp")
+                            calculateStack.push(calTemp)
                         }
                         "-" -> {
-                            val calTemp = calculateStack[rangeOfCalculateStack-1] - calculateStack[rangeOfCalculateStack-2]
-                            calculateStack.removeAt(rangeOfCalculateStack-1)
-                            rangeOfCalculateStack -= 1
-                            calculateStack.removeAt(rangeOfCalculateStack-1)
-                            rangeOfCalculateStack -= 1
-                            calculateStack.add(calTemp)
-                            Log.d("calculateLog", "active - is ${calculateStack[0]}")
+                            val calTemp = calculateStack.pop() as Int - calculateStack.pop() as Int
+                            Log.d("calculateLog", "is - $calTemp")
+                            calculateStack.push(calTemp)
                         }
                         "*" -> {
-                            val calTemp = calculateStack[rangeOfCalculateStack-1] * calculateStack[rangeOfCalculateStack-2]
-                            calculateStack.removeAt(rangeOfCalculateStack-1)
-                            rangeOfCalculateStack -= 1
-                            calculateStack.removeAt(rangeOfCalculateStack-1)
-                            rangeOfCalculateStack -= 1
-                            calculateStack.add(calTemp)
-                            Log.d("calculateLog", "active * is ${calculateStack[0]}")
+                            val calTemp = calculateStack.pop() as Int * calculateStack.pop() as Int
+                            Log.d("calculateLog", "is + $calTemp")
+                            calculateStack.push(calTemp)
                         }
                         "/" -> {
-                            val calTemp = calculateStack[rangeOfCalculateStack-1] / calculateStack[rangeOfCalculateStack-2]
-                            calculateStack.removeAt(rangeOfCalculateStack-1)
-                            rangeOfCalculateStack -= 1
-                            calculateStack.removeAt(rangeOfCalculateStack-1)
-                            rangeOfCalculateStack -= 1
-                            calculateStack.add(calTemp)
-                            Log.d("calculateLog", "active / is ${calculateStack[0]}")
+                            val calTemp = calculateStack.pop() as Int / calculateStack.pop() as Int
+                            calculateStack.push(calTemp)
                         }
                     }
                 }
             }
-            binding.IncludeInputLayout.userOutput.text = "${calculateStack[0]}"
+            binding.IncludeInputLayout.userOutput.text = "${calculateStack.get()[0]}"
         }.onFailure {e ->
             Log.d("calculateLog", "$e")
             Toast.makeText(this@MainActivity,e.message,Toast.LENGTH_LONG).show()
