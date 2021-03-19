@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     private var operatorStack = KotlinStack()
     private var numberStack = mutableListOf<Any>()
     private var bracketFlag = false
-
+    private var numberFlag = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,10 +118,20 @@ class MainActivity : AppCompatActivity() {
                 else -> {
                     operatorStack.push(string)
                 }
+
             }
+            numberFlag = true
 
         }else{
-            numberStack.add(string.toInt())
+            if (numberStack.size != 0 && !numberFlag){
+                var tmp = numberStack[numberStack.size-1]
+                numberStack.removeAt(numberStack.size-1)
+                numberStack.add((tmp.toString() + string).toInt())
+
+            } else{
+                numberStack.add(string.toInt())
+                numberFlag = false
+            }
         }
 
     }
