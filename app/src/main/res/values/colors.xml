@@ -10,6 +10,7 @@
 
 
     <color name = "add_black">#000000</color>
+    <color name = "add_gray">#cccccc</color>
     <color name = "add_green">#FF018786</color>
     <color name = "add_white">#f0f0f0</color>
 </resources>

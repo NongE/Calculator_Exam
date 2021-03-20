@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:textSize="60sp"
         android:gravity="end"
-        android:textColor="@color/add_black"
+        android:textColor="@color/add_gray"
         android:background="@color/add_white"
         android:padding="10dp"
         android:text="23123"
