@@ -2,24 +2,24 @@ package com.example.calculator
 
 class KotlinStack() {
 
-        private val stack = mutableListOf<Any>()
+        private val stack = mutableListOf<String>()
 
-        fun get():MutableList<Any>{
+        fun get():MutableList<String>{
             return stack
         }
         fun size(): Int{
             return stack.size
         }
-        fun push(item: Any){
+        fun push(item: String){
             stack.add(item)
         }
-        fun pop(): Any{
+        fun pop(): String{
             val tmp  = stack[stack.size-1]
             stack.removeAt(stack.size-1)
             return tmp
         }
 
-        fun remove(item: Any){
+        fun remove(item: String){
             stack.remove(item)
         }
 
