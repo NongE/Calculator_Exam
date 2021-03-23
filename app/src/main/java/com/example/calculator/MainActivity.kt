@@ -154,6 +154,10 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (calculateFlag) {
+
+                val seperateTemp:List<String> = includeInputLayout.userInput.text.split("")
+                Log.d("calculateLog", "is seperate 0 ${seperateTemp}")
+                
                 calculate()
                 calculateFlag = false
             }
@@ -164,6 +168,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun clear(){
+
         val includeInputLayout = binding.IncludeInputLayout
         includeInputLayout.userInput.text = ""
         includeInputLayout.userOutput.text = ""
