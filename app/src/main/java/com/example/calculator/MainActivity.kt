@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.calculator.databinding.ActivityMainBinding
 
 
+@Suppress("DEPRECATED_IDENTITY_EQUALS")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -98,12 +99,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         includeButtonView.btnEqual.setOnClickListener{
+
             val tmp = calculateStack.get()[0]
             val includeInputLayout = binding.IncludeInputLayout
 
-            clear()
-            includeInputLayout.userInput.text = tmp
-            numberStack.add(tmp)
+            if ((tmp.toFloatOrNull() ?: 1F) % 1 == 0F){
+                clear()
+                includeInputLayout.userInput.text = tmp.toFloat().toInt().toString()
+                numberStack.add(tmp)
+            }else{
+                clear()
+                includeInputLayout.userInput.text = tmp
+                numberStack.add(tmp)
+            }
+
+
+
         }
 
     }
@@ -155,13 +166,16 @@ class MainActivity : AppCompatActivity() {
 
             if (calculateFlag) {
 
-                val seperateTemp:List<String> = includeInputLayout.userInput.text.split("")
-                Log.d("calculateLog", "is seperate 0 ${seperateTemp}")
+
+
                 
                 calculate()
                 calculateFlag = false
             }
             includeInputLayout.userInput.append(string)
+            var seperateTemp = includeInputLayout.userInput.text.split("")
+            seperateTemp = seperateTemp.drop(1).dropLast(1)
+            Log.d("calculateLog", "is seperate ${seperateTemp}")
             Log.d("calculateLog", "is click calculate ${calculateStack.get()}")
         }
 
@@ -216,7 +230,14 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
-                binding.IncludeInputLayout.userOutput.text = calculateStack.get()[0]
+
+                if ((calculateStack.get()[0].toFloatOrNull() ?: 1F) % 1 == 0F){
+                    Log.d("calculateLog", "is ${((calculateStack.get()[0].toFloat()) % 1).toInt()}")
+                    binding.IncludeInputLayout.userOutput.text = calculateStack.get()[0].toFloat().toInt().toString()
+                }else{
+                    binding.IncludeInputLayout.userOutput.text = calculateStack.get()[0]
+                }
+
                 //calculateStack.clear()
 
         }.onFailure {e ->
