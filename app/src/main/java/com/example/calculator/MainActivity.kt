@@ -14,6 +14,7 @@ class MainActivity : AppCompatActivity() {
 
     private var operatorStack = KotlinStack()
     private var numberStack = mutableListOf<String>()
+    private var numberStack_tmp = mutableListOf<String>()
     private val calculateStack = KotlinStack()
     private var bracketFlag = false
     private var numberFlag = false
@@ -165,17 +166,40 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (calculateFlag) {
-
-
-
-                
                 calculate()
                 calculateFlag = false
             }
             includeInputLayout.userInput.append(string)
+
             var seperateTemp = includeInputLayout.userInput.text.split("")
             seperateTemp = seperateTemp.drop(1).dropLast(1)
             Log.d("calculateLog", "is seperate ${seperateTemp}")
+
+            for(index in seperateTemp.indices){
+                if(numberStack_tmp.size != 0){
+                    kotlin.runCatching {
+                        if (seperateTemp[index] == "0"){
+                            Log.d("calculateLog", "is zero!")
+                            numberStack_tmp[numberStack_tmp.size-1] = numberStack_tmp[numberStack_tmp.size-1] + seperateTemp[index]
+                        }else {
+                            val t = seperateTemp[index].toFloat()
+                            if (numberStack_tmp[numberStack_tmp.size-1] != "+") {
+                                numberStack_tmp[numberStack_tmp.size-1] = numberStack_tmp[numberStack_tmp.size-1] + seperateTemp[index]
+                            }else{
+                                numberStack_tmp.add(seperateTemp[index])
+                            }
+                        }
+                    }.onFailure {e ->
+                        Log.d("calculateLog", "except! index is $index")
+                        numberStack_tmp.add(seperateTemp[index])
+                    }
+                }else{
+                    numberStack_tmp.add(seperateTemp[index])
+                }
+            }
+            Log.d("calculateLog", "is numberStack_tmp ${numberStack_tmp}")
+            numberStack_tmp.clear()
+
             Log.d("calculateLog", "is click calculate ${calculateStack.get()}")
         }
 
