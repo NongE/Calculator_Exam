@@ -125,72 +125,43 @@ class MainActivity : AppCompatActivity() {
 
 
         if (operatorFlag){
-            if (calculateFlag){
-                var tmp = includeInputLayout.userInput.text.toString()
-                tmp = tmp.toCharArray().dropLast(1).joinToString(separator = "")
-                Log.d("calculateLog", "is change operator ${calculateStack.get()}")
-                includeInputLayout.userInput.text = tmp
-                operatorStack.pop()
-                operatorStack.push(string)
-
-            }else {
-                when (string) {
-                    ")" -> {
-                        operatorStack.push(string)
-                        operatorStack.remove("(")
-                        operatorStack.remove(")")
-                        operatorStack.reverse()
-                        numberStack.addAll(operatorStack.get())
-                        operatorStack.clear()
-                    }
-                    else -> {
-                        operatorStack.push(string)
-                        calculateFlag = true
-                    }
-
+            when (string) {
+                ")" -> {
+                    operatorStack.push(string)
+                    operatorStack.remove("(")
+                    operatorStack.remove(")")
+                    operatorStack.reverse()
+                    numberStack.addAll(operatorStack.get())
+                    operatorStack.clear()
+                }
+                else -> {
+                    operatorStack.push(string)
+                    calculateFlag = true
                 }
 
             }
+
+
             includeInputLayout.userInput.append(string)
             numberFlag = true
 
         }else{
-            if (numberStack.size != 0 && !numberFlag){
-                val tmp = numberStack[numberStack.size-1]
-                numberStack.removeAt(numberStack.size-1)
-                numberStack.add((tmp + string))
-
-            } else{
-                numberStack.add(string)
-                numberFlag = false
-            }
-            if (calculateFlag) {
-                calculate()
-                calculateFlag = false
-            }
-
             includeInputLayout.userInput.append(string)
 
             var seperateTemp = includeInputLayout.userInput.text.split("")
             seperateTemp = seperateTemp.drop(1).dropLast(1)
-            Log.d("calculateLog", "is seperate ${seperateTemp}")
 
             for(index in seperateTemp.indices){
                 if(numberStack_tmp.size != 0){
                     kotlin.runCatching {
-                        if (seperateTemp[index] == "0"){
-                            Log.d("calculateLog", "is zero!")
+                        val t = seperateTemp[index].toFloat()
+                        if (numberStack_tmp[numberStack_tmp.size-1] !in operatorArray) {
                             numberStack_tmp[numberStack_tmp.size-1] = numberStack_tmp[numberStack_tmp.size-1] + seperateTemp[index]
-                        }else {
-                            val t = seperateTemp[index].toFloat()
-                            if (numberStack_tmp[numberStack_tmp.size-1] !in operatorArray) {
-                                numberStack_tmp[numberStack_tmp.size-1] = numberStack_tmp[numberStack_tmp.size-1] + seperateTemp[index]
-                            }else{
-                                numberStack_tmp.add(seperateTemp[index])
-                            }
+                        }else{
+                            numberStack_tmp.add(seperateTemp[index])
                         }
+
                     }.onFailure {e ->
-                        Log.d("calculateLog", "except! index is $index")
                         numberStack_tmp.add(seperateTemp[index])
                     }
                 }else{
@@ -198,12 +169,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             numberStack_tmp.removeAll(operatorArray)
-            Log.d("calculateLog", "is numberStack_tmp ${numberStack_tmp}")
+            numberStack.clear()
+            numberStack.addAll(numberStack_tmp)
+
             numberStack_tmp.clear()
+            calculate()
 
-            Log.d("calculateLog", "is click calculate ${calculateStack.get()}")
         }
-
 
     }
 
@@ -228,7 +200,6 @@ class MainActivity : AppCompatActivity() {
             kotlin.runCatching {
                 operatorStack.reverse()
                 numberStack.addAll(operatorStack.get())
-                Log.d("calculateLog", "is number $numberStack")
                 for(index in 0 until numberStack.size){
                     if(numberStack[index] !in operatorArray) {
                         calculateStack.push(numberStack[index])
@@ -265,7 +236,7 @@ class MainActivity : AppCompatActivity() {
                     binding.IncludeInputLayout.userOutput.text = calculateStack.get()[0]
                 }
 
-                //calculateStack.clear()
+                calculateStack.clear()
 
         }.onFailure {e ->
             Log.d("calculateLog", "$e")
