@@ -164,11 +164,11 @@ class MainActivity : AppCompatActivity() {
                 numberStack.add(string)
                 numberFlag = false
             }
-
             if (calculateFlag) {
                 calculate()
                 calculateFlag = false
             }
+
             includeInputLayout.userInput.append(string)
 
             var seperateTemp = includeInputLayout.userInput.text.split("")
@@ -183,7 +183,7 @@ class MainActivity : AppCompatActivity() {
                             numberStack_tmp[numberStack_tmp.size-1] = numberStack_tmp[numberStack_tmp.size-1] + seperateTemp[index]
                         }else {
                             val t = seperateTemp[index].toFloat()
-                            if (numberStack_tmp[numberStack_tmp.size-1] != "+") {
+                            if (numberStack_tmp[numberStack_tmp.size-1] !in operatorArray) {
                                 numberStack_tmp[numberStack_tmp.size-1] = numberStack_tmp[numberStack_tmp.size-1] + seperateTemp[index]
                             }else{
                                 numberStack_tmp.add(seperateTemp[index])
@@ -197,11 +197,13 @@ class MainActivity : AppCompatActivity() {
                     numberStack_tmp.add(seperateTemp[index])
                 }
             }
+            numberStack_tmp.removeAll(operatorArray)
             Log.d("calculateLog", "is numberStack_tmp ${numberStack_tmp}")
             numberStack_tmp.clear()
 
             Log.d("calculateLog", "is click calculate ${calculateStack.get()}")
         }
+
 
     }
 
@@ -226,6 +228,7 @@ class MainActivity : AppCompatActivity() {
             kotlin.runCatching {
                 operatorStack.reverse()
                 numberStack.addAll(operatorStack.get())
+                Log.d("calculateLog", "is number $numberStack")
                 for(index in 0 until numberStack.size){
                     if(numberStack[index] !in operatorArray) {
                         calculateStack.push(numberStack[index])
