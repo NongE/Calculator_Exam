@@ -101,20 +101,12 @@ class MainActivity : AppCompatActivity() {
 
         includeButtonView.btnEqual.setOnClickListener{
 
-            val tmp = calculateStack.get()[0]
             val includeInputLayout = binding.IncludeInputLayout
+            val temp = includeInputLayout.userOutput.text.toString()
 
-            if ((tmp.toFloatOrNull() ?: 1F) % 1 == 0F){
-                clear()
-                includeInputLayout.userInput.text = tmp.toFloat().toInt().toString()
-                numberStack.add(tmp)
-            }else{
-                clear()
-                includeInputLayout.userInput.text = tmp
-                numberStack.add(tmp)
-            }
+            clear()
 
-
+            includeInputLayout.userInput.text = temp
 
         }
 
@@ -186,6 +178,7 @@ class MainActivity : AppCompatActivity() {
         includeInputLayout.userOutput.text = ""
         operatorStack.clear()
         numberStack.clear()
+        numberStack_tmp.clear()
         calculateStack.clear()
         bracketFlag = false
         numberFlag = false
