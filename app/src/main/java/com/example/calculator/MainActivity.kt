@@ -193,6 +193,7 @@ class MainActivity : AppCompatActivity() {
             kotlin.runCatching {
                 operatorStack.reverse()
                 numberStack.addAll(operatorStack.get())
+                Log.d("calculateLog", "calculate stack ${numberStack}")
                 for(index in 0 until numberStack.size){
                     if(numberStack[index] !in operatorArray) {
                         calculateStack.push(numberStack[index])
@@ -215,8 +216,11 @@ class MainActivity : AppCompatActivity() {
                             "/" -> {
                                 val t1 = calculateStack.pop().toFloatOrNull() ?: 1F
                                 val t2 = calculateStack.pop().toFloatOrNull() ?: 1F
-                                val calTemp = t2 / t1
-                                calculateStack.push(calTemp.toString())
+                                val calTemp = t1 * (1 / t2)
+                                Log.d("calculateLog", "is ${t1}")
+                                Log.d("calculateLog", "is ${t2}")
+                                calculateStack.push((1/calTemp).toString())
+                                Log.d("calculateLog", "is after ${calculateStack.get()}")
                             }
                         }
                     }
